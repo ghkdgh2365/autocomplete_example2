@@ -1,0 +1,131 @@
+<p id="notice"><%= notice %></p>
+<div class="books-search">
+  <input type="text" id="books-search-txt" autofocus>
+  <div class="results" id="books-search-results"></div>
+</div>
+
+
+<%= link_to 'Main', root_path %>
+<script>
+  $(function() {
+    var app = window.app = {};
+    
+    app.Books = function() {
+      this._input = $('#books-search-txt');
+      this._initAutocomplete();
+    };
+    
+    app.Books.prototype = {
+      _initAutocomplete: function() {
+        this._input
+          .autocomplete({
+            source: '/books/search',
+            appendTo: '#books-search-results',
+            select: $.proxy(this._select, this)
+          })
+          .autocomplete('instance')._renderItem = $.proxy(this._render, this);
+      },
+    
+      _render: function(ul, item) {
+        var markup = [
+          '<span class="img">',
+            '<img src="' + item.image_url + '" />',
+          '</span>',
+          '<span class="title">' + item.title + '</span>',
+          '<span class="author">' + item.author + '</span>',
+          '<span class="price">' + item.price + ' ' + item.published_at + '</span>'
+        ];
+        return $('<li>')
+          .append(markup.join(''))
+          .appendTo(ul);
+      },
+    
+      _select: function(e, ui) {
+        this._input.val(ui.item.title + ' - ' + ui.item.author);
+        return false;
+      }
+    };
+    new app.Books;
+  });
+</script>
+<style>
+  .books-search input {
+    width: 100%;
+    font-size: 1em;
+    padding: .5em 1.3em;
+    background: transparent;
+    border: 1px solid #ddd;
+    border-radius: 2em;
+  }
+  
+  .books-search input:focus {
+    border-color: #A5CEF5;
+  }
+  
+  .books-search .results .ui-widget-content {
+    background: #fff;
+    font-size: .9em;
+    padding: .5em 0;
+    border-color: #ddd;
+    box-shadow: 0 .1em .2em rgba(187, 187, 187, 0.64);
+    line-height: 1.2;
+    max-height: 20em;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+  
+  .books-search .results .ui-menu-item {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    padding: .4em .6em .4em 6.2em;
+    position: relative;
+    border: 0;
+    border-left: 5px solid transparent;
+    position: relative;
+    height: 6.5em;
+  }
+  
+  .books-search .results .ui-state-focus {
+    background: #fff;
+    border-left-color: #08c;
+    font-weight: 300;
+  }
+  .books-search .results .ui-menu-item .img {
+    position: absolute;
+    width: 5em;
+    height: 6em;
+    top: .4em;
+    left: .6em;
+    overflow: hidden;
+  }
+  
+  .books-search .results .ui-menu-item .img img {
+    max-width: 100%;
+  }
+  
+  .books-search .results .ui-menu-item .title {
+    display: block;
+    color: #555;
+  }
+  
+  .books-search .results .ui-menu-item .author {
+    display: block;
+    font-size: .8em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-top: .6em;
+    letter-spacing: 1px;
+  }
+  
+  .books-search .results .ui-menu-item .price {
+    display: block;
+    font-size: .8em;
+    color: #aaa;
+    margin-top: .5em;
+  }
+  
+  .books-search .results .ui-state-focus .price,
+  .books-search .results .ui-state-focus .author,
+  .books-search .results .ui-state-focus .title {
+    color: #08c;
+  }
+</style>
