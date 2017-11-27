@@ -219,3 +219,5 @@ end
 </style>
 ```
 를 입력해줍니다.
+
+*reference - http://lugolabs.com/articles/20-jquery-ui-autocomplete-with-ruby-on-rails 
